@@ -1,0 +1,10 @@
+[package]
+name = "ping"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bevy = { workspace = true}
+bevy_quinnet ={ workspace = true }
+bevy_skein = { workspace = true }
+protocol = { path = "../../protocol"}
