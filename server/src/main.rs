@@ -6,6 +6,8 @@ use bevy_quinnet::server::{QuinnetServer, QuinnetServerPlugin, ServerEndpointCon
 use bevy_quinnet::shared::channels::ChannelsConfiguration;
 use protocol::{ClientMessage, ServerMessage};
 use std::net::Ipv6Addr;
+use bevy_skein::SkeinPlugin;
+
 
 fn main() {
     App::new()
@@ -13,6 +15,7 @@ fn main() {
             ScheduleRunnerPlugin::default(),
             LogPlugin::default(),
             QuinnetServerPlugin::default(),
+            SkeinPlugin { handle_brp: false },
         ))
         .add_systems(Startup, start_listening)
         .add_systems(Update, handle_client_messages)
