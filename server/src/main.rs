@@ -6,8 +6,6 @@ use bevy_quinnet::server::{QuinnetServer, QuinnetServerPlugin, ServerEndpointCon
 use bevy_quinnet::shared::channels::ChannelsConfiguration;
 use protocol::{ClientMessage, ServerMessage};
 use std::net::Ipv6Addr;
-use bevy_skein::SkeinPlugin;
-
 
 fn main() {
     App::new()
@@ -15,7 +13,6 @@ fn main() {
             ScheduleRunnerPlugin::default(),
             LogPlugin::default(),
             QuinnetServerPlugin::default(),
-            SkeinPlugin { handle_brp: false },
         ))
         .add_systems(Startup, start_listening)
         .add_systems(Update, handle_client_messages)
@@ -41,7 +38,9 @@ fn handle_client_messages(mut server: ResMut<QuinnetServer>) {
             endpoint.try_receive_message_from::<ClientMessage>(client_id)
         {
             match message {
-                ClientMessage::Ping { time_elapsed: time_delta } => {
+                ClientMessage::Ping {
+                    time_elapsed: time_delta,
+                } => {
                     endpoint
                         .send_message(
                             client_id,

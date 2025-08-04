@@ -1,6 +1,6 @@
+use bevy::app::{App, Plugin, Update};
 use bevy::prelude::{Res, ResMut, Resource, Time, Timer, TimerMode};
 use bevy_quinnet::client::QuinnetClient;
-use bevy::app::{App, Plugin, Update};
 use protocol::ClientMessage;
 
 pub struct PingPlugin;
@@ -8,7 +8,7 @@ pub struct PingPlugin;
 impl Plugin for PingPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<PingTimer>()
-            .add_systems(Update,  ping_system);
+            .add_systems(Update, ping_system);
     }
 }
 
@@ -30,6 +30,8 @@ fn ping_system(time: Res<Time>, mut client: ResMut<QuinnetClient>, mut timer: Re
     let time_delta = time.elapsed();
     let connection = client.connection_mut();
     connection
-        .send_message(ClientMessage::Ping { time_elapsed: time_delta })
+        .send_message(ClientMessage::Ping {
+            time_elapsed: time_delta,
+        })
         .expect("Error sending Ping");
 }

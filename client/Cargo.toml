@@ -6,8 +6,7 @@ edition = "2024"
 [dependencies]
 bevy = { workspace = true }
 bevy_quinnet = { workspace = true}
-bevy_skein = { workspace = true}
-bevy_remote = "0.16.1"
 protocol = { path = "../protocol"}
+world = { path = "../plugins/world"}
 ping = { path = "../plugins/ping"}
 

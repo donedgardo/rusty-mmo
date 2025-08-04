@@ -1,13 +1,11 @@
-use bevy::prelude::{App, AssetPlugin, Commands, default, DefaultPlugins, PluginGroup, Res, ResMut, SceneRoot, Startup, Update};
+use bevy::prelude::*;
 use bevy_quinnet::client::certificate::CertificateVerificationMode;
 use bevy_quinnet::client::connection::ClientEndpointConfiguration;
 use bevy_quinnet::client::{QuinnetClient, QuinnetClientPlugin};
 use bevy_quinnet::shared::channels::ChannelsConfiguration;
-use std::net::Ipv6Addr;
-use bevy::asset::AssetServer;
-use bevy::gltf::GltfAssetLabel;
 use ping::PingPlugin;
-
+use std::net::Ipv6Addr;
+use world::WorldPlugin;
 
 fn main() {
     App::new()
@@ -18,8 +16,15 @@ fn main() {
             }),
             QuinnetClientPlugin::default(),
             PingPlugin,
-            bevy_skein::SkeinPlugin::default(),
-        )).add_systems(Startup, (start_connection, load_word))
+            WorldPlugin
+        ))
+        .add_systems(
+            Startup,
+            (
+                start_connection,
+                setup_camera_and_global_lights,
+            ),
+        )
         .add_systems(Update, client::handle_server_messages)
         .run();
 }
@@ -39,10 +44,18 @@ fn start_connection(mut client: ResMut<QuinnetClient>) {
         .expect("Error connecting to server.");
 }
 
-fn load_word(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(SceneRoot(asset_server.load(
-        GltfAssetLabel::Scene(0).from_asset("00.gltf"),
-    )));
+fn setup_camera_and_global_lights(mut commands: Commands) {
+    commands.spawn((
+        Camera3d::default(),
+        Transform::from_xyz(0.0, 16.0, 40.0).looking_at(Vec3::new(0.0, 10.0, 0.0), Vec3::Y),
+    ));
+    commands.spawn((PointLight::default(), Transform::from_xyz(5.0, 5.0, 5.0)));
+    commands.spawn((
+        DirectionalLight {
+            illuminance: 4000.0,
+            shadows_enabled: true,
+            ..Default::default()
+        },
+        Transform::default().looking_at(-Vec3::Y, Vec3::Z),
+    ));
 }
-
-

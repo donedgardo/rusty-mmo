@@ -1,5 +1,5 @@
-use bevy::app::App;
 use bevy::MinimalPlugins;
+use bevy::app::App;
 use bevy::prelude::*;
 
 use client::{SceneLoader, handle_server_messages};
@@ -11,7 +11,6 @@ fn create_test_app() -> App {
         .add_systems(Update, handle_server_messages);
     app
 }
-
 
 #[test]
 fn test_scene_loading_integration() {

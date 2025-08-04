@@ -1,13 +1,14 @@
 [workspace]
+resolver = "2"
 members = [
     "client",
     "server",
     "protocol",
     "plugins/ping",
+    "plugins/world",
 ]
 
 [workspace.dependencies]
-bevy = "0.16.0"
+bevy = "0.16.1"
 bevy_quinnet = "0.17.0"
-bevy_skein = "0.2.1"
 serde = { version = "1.0.219", features = ["derive"] }

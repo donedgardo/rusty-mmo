@@ -1,7 +1,7 @@
 use bevy::log::info;
 use bevy::prelude::{Res, ResMut, Resource, Time};
 use bevy_quinnet::client::QuinnetClient;
-use protocol::{ServerMessage};
+use protocol::ServerMessage;
 
 #[derive(Resource, Default)]
 pub struct SceneLoader {
@@ -20,11 +20,12 @@ pub fn handle_server_messages(mut client: ResMut<QuinnetClient>, time: Res<Time>
         client.connection_mut().receive_message::<ServerMessage>()
     {
         match message {
-            ServerMessage::Pong { ping_time_elapsed: ping_time_delta } => {
+            ServerMessage::Pong {
+                ping_time_elapsed: ping_time_delta,
+            } => {
                 info!("Ping: {:?}", time.elapsed() - ping_time_delta);
             }
             ServerMessage::LoadScene { .. } => {}
         }
     }
 }
-
