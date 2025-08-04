@@ -14,7 +14,6 @@ pub fn handle_server_messages(mut client: ResMut<QuinnetClient>, time: Res<Time>
             } => {
                 info!("Ping: {:?}", time.elapsed() - ping_time_delta);
             }
-            ServerMessage::LoadScene { .. } => {}
         }
     }
 }
