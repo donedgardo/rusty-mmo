@@ -3,28 +3,22 @@ use bevy_quinnet::client::certificate::CertificateVerificationMode;
 use bevy_quinnet::client::connection::ClientEndpointConfiguration;
 use bevy_quinnet::client::{QuinnetClient, QuinnetClientPlugin};
 use bevy_quinnet::shared::channels::ChannelsConfiguration;
-use ping::PingPlugin;
+use ping::ClientPingPlugin;
 use std::net::Ipv6Addr;
 use world::WorldPlugin;
 
 fn main() {
     App::new()
         .add_plugins((
-            DefaultPlugins.set(AssetPlugin {
+          DefaultPlugins.set(AssetPlugin {
                 file_path: "../assets".to_string(),
                 ..default()
             }),
-            QuinnetClientPlugin::default(),
-            PingPlugin,
-            WorldPlugin
+          QuinnetClientPlugin::default(),
+          ClientPingPlugin,
+          WorldPlugin,
         ))
-        .add_systems(
-            Startup,
-            (
-                start_connection,
-                setup_camera_and_global_lights,
-            ),
-        )
+        .add_systems(Startup, (start_connection, setup_camera_and_global_lights))
         .add_systems(Update, client::handle_server_messages)
         .run();
 }

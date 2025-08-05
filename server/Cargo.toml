@@ -15,4 +15,5 @@ opt-level = 3
 bevy = { workspace = true }
 bevy_quinnet = { workspace = true }
 protocol = { path = "../protocol" }
+ping = { path = "../plugins/ping"}
 world = { path = "../plugins/world" }
