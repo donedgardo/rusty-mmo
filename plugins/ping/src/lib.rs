@@ -1,19 +1,18 @@
 use bevy::app::{App, Plugin, Update};
+use bevy::log::info;
 use bevy::prelude::{EventReader, Res, ResMut, Resource, Time, Timer, TimerMode};
 use bevy_quinnet::client::QuinnetClient;
 use bevy_quinnet::server::QuinnetServer;
-use protocol::{ClientMessage, ClientMessageReceived, ServerMessage};
+use protocol::{ClientMessage, ClientMessageReceived, ServerMessage, ServerMessageReceived};
 
 pub struct ClientPingPlugin;
 
 impl Plugin for ClientPingPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<PingTimer>()
-            .add_systems(Update, ping_system);
+            .add_systems(Update, (ping_system, log_ping));
     }
 }
-
-
 
 #[derive(Resource)]
 struct PingTimer(Timer);
@@ -38,6 +37,18 @@ fn ping_system(time: Res<Time>, mut client: ResMut<QuinnetClient>, mut timer: Re
         })
         .expect("Error sending Ping");
 }
+
+fn log_ping(mut events: EventReader<ServerMessageReceived>, time: Res<Time>) {
+    for event in events.read() {
+        match event.message {
+            ServerMessage::Pong {
+                ping_time_elapsed: ping_time_delta,
+            } => {
+                info!("Ping: {:?}", time.elapsed() - ping_time_delta);
+            }
+        }
+    }
+}
 pub struct ServerPingPlugin;
 
 impl Plugin for ServerPingPlugin {
@@ -57,13 +68,13 @@ fn handle_ping_messages(
             } => {
                 let endpoint = server.endpoint_mut();
                 endpoint
-                  .send_message(
-                      event.client_id,
-                      ServerMessage::Pong {
-                          ping_time_elapsed: time_delta,
-                      },
-                  )
-                  .expect("Error ponging.");
+                    .send_message(
+                        event.client_id,
+                        ServerMessage::Pong {
+                            ping_time_elapsed: time_delta,
+                        },
+                    )
+                    .expect("Error ponging.");
             }
         }
     }

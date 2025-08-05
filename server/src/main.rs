@@ -3,17 +3,15 @@ use bevy::app::{App, Startup, Update};
 use bevy::core_pipeline::CorePipelinePlugin;
 use bevy::log::LogPlugin;
 use bevy::pbr::PbrPlugin;
-use bevy::prelude::{
-    AssetPlugin, EventWriter, ImagePlugin, ResMut, TransformPlugin, default,
-};
+use bevy::prelude::{AssetPlugin, EventWriter, ImagePlugin, ResMut, TransformPlugin, default};
 use bevy::render::RenderPlugin;
 use bevy::render::settings::{RenderCreation, WgpuSettings};
 use bevy::window::WindowPlugin;
 use bevy_quinnet::server::certificate::CertificateRetrievalMode;
 use bevy_quinnet::server::{QuinnetServer, QuinnetServerPlugin, ServerEndpointConfiguration};
 use bevy_quinnet::shared::channels::ChannelsConfiguration;
-use protocol::{ClientMessage, ClientMessageReceived};
 use ping::ServerPingPlugin;
+use protocol::{ClientMessage, ClientMessageReceived};
 use std::net::Ipv6Addr;
 use world::WorldPlugin;
 
@@ -39,7 +37,7 @@ fn main() {
             LogPlugin::default(),
             QuinnetServerPlugin::default(),
             WorldPlugin,
-            ServerPingPlugin
+            ServerPingPlugin,
         ))
         .add_systems(Startup, start_listening)
         .add_systems(Update, receive_client_messages)
